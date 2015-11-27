@@ -1,0 +1,6 @@
+# Vagrant host
+
+
+[voltdbs]
+node21-sit  ansible_ssh_host=10.0.0.41   internal_ip=10.0.0.41
+node22-sit  ansible_ssh_host=10.0.0.42   internal_ip=10.0.0.42

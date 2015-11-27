@@ -1,0 +1,26 @@
+# This playbook deploys the whole application stack in this site.
+
+
+#
+# Apply common configuration to all hosts
+#
+
+- hosts: all
+  sudo: True
+
+  roles:
+    #- voltdb
+    - yatesr.timezone
+    - geerlingguy.ntp
+    - voltdb
+
+  vars:
+    vagrant_home: /home/vagrant
+    owner: vagrant
+    group: vagrant
+    voltdb_version: voltdb-5.8beta2
+    timezone: Asia/Taipei
+    ntp_timezone: Asia/Taipei
+    is_replace: False
+    #voltdb_host: 10.0.0.11
+

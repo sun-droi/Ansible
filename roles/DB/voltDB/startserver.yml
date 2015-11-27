@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+  sudo: True
+
+  roles: 
+   - voltdb-start
+
+  vars:
+    vagrant_home: /home/vagrant
+    voltdb_host: 10.0.0.41

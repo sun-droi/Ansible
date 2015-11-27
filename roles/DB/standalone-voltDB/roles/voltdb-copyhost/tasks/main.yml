@@ -1,0 +1,7 @@
+---
+# Tasks file for voltdb-server
+
+# in control-machine, have to change the content of hosts-list, too
+
+- name: copy hosts
+  copy: src=../files/hosts  dest=/etc/hosts

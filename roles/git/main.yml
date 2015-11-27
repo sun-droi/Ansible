@@ -1,0 +1,6 @@
+- hosts: localhost
+  remote_user: inlake
+  sudo: true
+
+  roles:
+    - { role: git }

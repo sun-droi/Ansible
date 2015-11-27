@@ -1,0 +1,12 @@
+- hosts: all
+  sudo: True
+
+  roles:
+    - voltdb-cluster
+
+  vars:
+    vagrant_home: /home/vagrant
+    #voltdb_version: voltdb-5.7
+    voltdb_host: 10.0.0.41
+    ntp_host: pool.ntp.org
+    is_replace: False

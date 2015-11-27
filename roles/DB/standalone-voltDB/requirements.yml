@@ -1,0 +1,11 @@
+#---
+# commons
+#
+
+- # @see https://galaxy.ansible.com/list#/roles/1429
+  src: yatesr.timezone
+  path: roles/
+
+- # @see https://galaxy.ansible.com/list#/roles/464
+  src: geerlingguy.ntp
+  path: roles/

@@ -1,0 +1,7 @@
+---
+
+- include: shutdownserver.yml
+
+- include: startserver.yml
+
+

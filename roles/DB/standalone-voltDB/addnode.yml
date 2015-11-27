@@ -1,0 +1,21 @@
+---
+
+- hosts: all
+  sudo: True
+
+  roles: 
+   - yatesr.timezone
+   - geerlingguy.ntp
+   - voltdb
+   - voltdb-cluster
+
+  vars:
+    vagrant_home: /home/vagrant
+    voltdb_host: 10.0.0.41
+    ntp_host: pool.ntp.org
+    owner: vagrant
+    group: vagrant
+    voltdb_version: voltdb-5.8beta2
+    timezone: Asia/Taipei
+    ntp_timezone: Asia/Taipei
+    is_replace: False

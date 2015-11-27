@@ -1,0 +1,10 @@
+---
+
+- hosts: node21-sit
+  sudo: True
+
+  roles: 
+   - voltdb-shutdown
+
+  vars:
+    voltdb_host: 10.0.0.41

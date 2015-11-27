@@ -1,0 +1,6 @@
+- hosts: localhost
+  remote_user: user
+  sudo: true
+
+  roles:
+  - /etc/ansible/roles/acceleanu.jenkins

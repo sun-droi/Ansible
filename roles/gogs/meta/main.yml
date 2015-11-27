@@ -1,0 +1,24 @@
+---
+dependencies:
+  - git
+
+galaxy_info:
+  author: Sun
+  description: "Gogs: Go Git Service"
+  company: "Midwestern Mac, LLC"
+  license: "license (BSD, MIT)"
+  min_ansible_version: 1.4
+  platforms:
+  - name: EL
+    versions:
+    - 6
+    - 7
+  - name: Ubuntu
+    versions:
+    - all
+  - name: Debian
+    versions:
+    - all
+  categories:
+    - development
+    - web

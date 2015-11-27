@@ -1,0 +1,8 @@
+- name: install add-apt-repository binary for Ansible to work
+  apt: name=python-software-properties state=present update_cache=yes
+
+- name: install ntpdate binary for NTP to work
+  apt: name=ntpdate state=present update_cache=yes
+
+- name: install openjdk-7-jdk
+  apt: name=openjdk-7-jdk state=latest install_recommends=no

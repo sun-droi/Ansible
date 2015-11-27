@@ -1,0 +1,74 @@
+- name: delegate to APT system for installation
+  include: use-apt.yml
+  when: ansible_pkg_mgr == "apt"
+
+#- name: delegate to YUM system for installation
+#  include: use-yum.yml
+#  when: ansible_pkg_mgr == "yum"
+
+- name: copy hosts
+  copy: src=../files/hosts  dest=/etc/hosts
+  #notify:
+  #- restart network
+
+- stat: path={{vagrant_home}}/{{voltdb_version}}.tar.gz
+  register: voltdb_tar_check     
+  
+- name: copy VoltDB tar.gz
+  copy: src=../files/{{voltdb_version}}.tar.gz  dest={{vagrant_home}}/{{voltdb_version}}.tar.gz
+  when: ({{is_replace}}) or (voltdb_tar_check.stat.exists == False)
+
+- name: extract archive
+  unarchive: src={{vagrant_home}}/{{voltdb_version}}.tar.gz dest=/opt copy=no
+  when: ({{is_replace}}) or (voltdb_tar_check.stat.exists == False)
+
+- name: clean folder
+  command: rm -rf /opt/voltdb || true
+  when: ({{is_replace}}) or (voltdb_tar_check.stat.exists == False)
+
+- name: move to voltdb
+  command: mv /opt/{{voltdb_version}} /opt/voltdb
+  when: ({{is_replace}}) or (voltdb_tar_check.stat.exists == False)
+
+- name: copy postgreSQL driver
+  copy: src=../files/postgresql-9.4-1205.jdbc4.jar  dest=/opt/voltdb/lib/postgresql-9.4-1205.jdbc4.jar
+  
+- name: copy VoltDB configuration
+  copy: src=../files/.bashrc  dest={{vagrant_home}}/.bashrc
+
+- name: copy VoltDB configuration
+  copy: src=../files/rc.local  dest=/etc/rc.local
+
+- name: Set file permissions
+  file: dest=/etc/rc.local state=file
+        owner={{owner}} group={{group}}
+        mode=0775
+
+- name: execute rc.local
+  command: /etc/rc.local
+
+- name: source bashrc
+  action: shell . {{vagrant_home}}/.bashrc
+
+#- name: shell1
+#  command: bash -c "echo never > /sys/kernel/mm/transparent_hugepage/enabled"
+
+#- name: shell2
+#  command: bash -c "echo never > /sys/kernel/mm/transparent_hugepage/defrag"
+
+- name: create cluster-test folder
+  command: mkdir -p {{vagrant_home}}/cluster-test
+
+- name: Set download dir permissions
+  file: dest={{vagrant_home}}/cluster-test state=directory
+        owner={{owner}} group={{group}}
+        mode=0775
+        recurse=yes
+
+- name: copy deployment.xml
+  copy: src=../files/deployment.xml  dest={{vagrant_home}}/cluster-test/deployment.xml
+
+- name: copy db_schema.sql
+  copy: src=../files/db.sql  dest={{vagrant_home}}/cluster-test/db.sql
+
+

@@ -1,0 +1,41 @@
+---
+# Include variables and define needed variables.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Ensure unzip is installed (RedHat).
+  yum: pkg=unzip state=installed
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure unzip is installed (Debian).
+  apt: pkg=unzip state=installed
+  when: ansible_os_family == 'Debian'
+
+- name: Create user for Gogs.
+  user:
+    name: "{{ gogs_user }}"
+    comment: Gogs
+    home: "{{ gogs_user_home }}"
+
+- name: Download Gogs.
+  shell: cp /etc/ansible/roles/gogs/vars/linux_amd64.zip "{{ gogs_user_home }}/gogs.zip"
+
+- name: Expand Gogs.
+  shell: >
+    su -c "unzip {{ gogs_user_home }}/gogs.zip -d {{ gogs_user_home }}" -s /bin/bash {{ gogs_user }}
+    chdir={{ gogs_user_home }}
+    creates={{ gogs_user_home }}/gogs/gogs
+
+- include: init-setup.yml
+- include: gogs-mysql.yml
+
+- name: Create Gogs log folder.
+  file:
+    path: "{{ gogs_user_home }}/gogs/log"
+    state: directory
+    owner: "{{ gogs_user }}"
+    group: "{{ gogs_user }}"
+    mode: 0755
+
+- name: Ensure Gogs is running.
+  service: name=gogs state=started enabled=yes

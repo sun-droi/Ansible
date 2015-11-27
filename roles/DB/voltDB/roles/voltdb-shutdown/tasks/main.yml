@@ -1,0 +1,11 @@
+---
+# Tasks file for voltdb-server
+
+#- name: Load the OS specific variables
+#  include_vars: "{{ role_path }}/vars/{{ ansible_os_family }}.yml"
+
+- name: voltadmin pause
+  command: /opt/voltdb/bin/voltadmin pause
+
+- name: voltadmin shutdown
+  command: /opt/voltdb/bin/voltadmin shutdown

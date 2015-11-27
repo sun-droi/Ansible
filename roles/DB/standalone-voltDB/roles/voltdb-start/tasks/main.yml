@@ -1,0 +1,19 @@
+---
+# Tasks file for voltdb-server
+
+#- name: Load the OS specific variables
+#  include_vars: "{{ role_path }}/vars/{{ ansible_os_family }}.yml"
+
+- name: change active dir to {{vagrant_home}}/cluster-test
+  command: bash -lc "cd {{vagrant_home}}/cluster-test"
+
+- stat: path={{vagrant_home}}/cluster-test/catalog.jar
+  register: catalog_check  
+  
+- name: compile schema to catalog
+  command: /opt/voltdb/bin/voltdb compile {{vagrant_home}}/cluster-test/db.sql --output={{vagrant_home}}/cluster-test/catalog.jar
+  when: catalog_check.stat.exists == False
+  
+- name: init cluster
+  command: /opt/voltdb/bin/voltdb create {{vagrant_home}}/cluster-test/catalog.jar --deployment={{vagrant_home}}/cluster-test/deployment.xml --host={{voltdb_host}} 
+

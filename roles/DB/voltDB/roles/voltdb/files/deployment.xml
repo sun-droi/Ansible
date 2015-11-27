@@ -1,0 +1,9 @@
+    <deployment>
+        <cluster hostcount="2" sitesperhost="1" kfactor="0" elastic="enabled" />
+        <!--<security enabled="true"/>-->
+        <users>
+          <!--<user name="operator" password="mech" roles="allproc" />-->
+          <user name="vagrant" password="vagrant" roles="admin" />
+          <!--<user name="clientapp" password="xyzzy" roles="apps" />-->
+       </users>
+    </deployment>

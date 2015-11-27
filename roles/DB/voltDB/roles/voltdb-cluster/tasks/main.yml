@@ -1,0 +1,42 @@
+#- name: delegate to APT system for installation
+#  include: use-apt.yml
+#  when: ansible_pkg_mgr == "apt"
+
+#- name: delegate to YUM system for installation
+#  include: use-yum.yml
+#  when: ansible_pkg_mgr == "yum"
+
+#- name: force ntp update
+  #command: "ntpdate {{ntp_host}}"
+#  shell: "service ntp stop && ntpdate -s {{ntp_host}} && service ntp start"
+
+- name: restart ntp
+  service: name=ntp state=restarted
+
+- name: force ntp stop
+  shell: "service ntp stop"
+
+- name: force ntp update
+  command: "ntpdate {{ntp_host}}"
+
+- name: force ntp start
+  shell: "service ntp start"
+
+- name: change active dir to {{vagrant_home}}/cluster-test
+  command: bash -lc "cd {{vagrant_home}}/cluster-test"
+
+- stat: path={{vagrant_home}}/cluster-test/catalog.jar
+  register: catalog_check   
+  
+- name: compile schema to catalog
+  command: /opt/voltdb/bin/voltdb compile {{vagrant_home}}/cluster-test/db.sql --output={{vagrant_home}}/cluster-test/catalog.jar
+  when: ({{is_replace}}) or (catalog_check.stat.exists == False)
+  
+#- name: wait for catalog.jar created
+#  wait_for: path={{vagrant_home}}/cluster-test/catalog.jar
+
+- name: init cluster
+  #shell: $(/opt/voltdb/bin/voltdb create --deployment={{vagrant_home}}/cluster-test/deployment.xml --host={{voltdb_host}} &) chdir=/home
+  #--background 
+  command: /opt/voltdb/bin/voltdb create {{vagrant_home}}/cluster-test/catalog.jar --deployment={{vagrant_home}}/cluster-test/deployment.xml --host={{voltdb_host}}
+  
